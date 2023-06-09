@@ -3,24 +3,11 @@
 #include <sstream>
 #include <cstdlib>
 #include <cstring>
-#include <pthread.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <unistd.h>
 
-struct C_information {
-    int c_socket;
-    std::string filename;
-
-    C_information(int c_socket, std::string filename)
-        : c_socket(c_socket), filename(filename) {}
-};
-
-void* handle_client(void* arg) {
-    C_information* client_data = (C_information*)arg;
-    int c_socket = client_data->c_socket;
-    std::string filename = client_data->filename;
-
+void handle_client(int c_socket) {
     // Read messages from the client
     char buffer[1024];
     while (true) {
@@ -68,8 +55,6 @@ void* handle_client(void* arg) {
 
     // Close the socket
     close(c_socket);
-    delete client_data;
-    return nullptr;
 }
 
 int main() {
@@ -112,15 +97,19 @@ int main() {
         // Log a message when a client connects
         std::cout << "Client connected\n";
 
-        // Create a thread to handle the client
-        pthread_t thread;
-        C_information* client_data = new C_information(c_socket, "");
-        pthread_create(&thread, nullptr, handle_client, client_data);
-        pthread_detach(thread);
+        // Fork a new process to handle the client
+        pid_t pid = fork();
+        if (pid == -1) {
+            std::cerr << "Failed to fork\n";
+            return 1;
+        } else if (pid == 0) {
+            // Child process
+            handle_client(c_socket);
+            exit(0);
+        } else {
+            // Parent process
+            close(c_socket);
+        }
     }
 
-    // Close the socket
-    close(s_socket);
-
-    return 0;
 }

@@ -31,13 +31,13 @@ int main() {
     char buffer[1024];
     while (true) {
         // Prompt the user to enter two numbers
-        int num1, num2;
-        std::cout << "Enter two numbers (press enter after each input):\n";
+        float num1, num2;
+        std::cout << "Enter two numbers:\n";
         std::cin >> num1 >> num2;
 
         // Prompt the user to select an operator
         char op;
-        std::cout << "Select an operator from the list:\n";
+        std::cout << "Select an operator\n";
         std::cout << "1. Addition (+)\n";
         std::cout << "2. Subtraction (-)\n";
         std::cout << "3. Multiplication (*)\n";
@@ -78,7 +78,7 @@ int main() {
         }
 
         // Display the result
-        int result = std::stoi(buffer);
+        int result = std::stof(buffer);
         std::cout << "Result of operation: " << result << '\n';
 
         // Prompt the user to perform another operation or exit
@@ -87,7 +87,7 @@ int main() {
         std::cout << "2. Exit the program\n";
         int option;
         std::cin >> option;
-         if (option == 2) {
+        if (option == 2) {
             break;
         }
     }

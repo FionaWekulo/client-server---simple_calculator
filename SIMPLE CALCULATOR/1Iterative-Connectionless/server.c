@@ -18,7 +18,7 @@ int main() {
     memset(&s_address, 0, sizeof(s_address));
     s_address.sin_family = AF_INET;
     s_address.sin_port = htons(4444);
-    s_address.sin_addr.s_addr = INADDR_ANY;
+    //s_address.sin_addr.s_addr = INADDR_ANY;
     if (bind(s_socket, (struct sockaddr*)&s_address, sizeof(s_address)) == -1) {
         fprintf(stderr, "Failed to bind socket\n");
         return 1;
